@@ -11,7 +11,6 @@ import (
   "github.com/bogdan-deac/deepswap"
 )
 
-// does not work with alias types
 type Ugly = struct {
   A string
   B int
