@@ -156,3 +156,90 @@ func TestDeepswap(t *testing.T) {
 		assert.Truef(t, tc.resF(res), "[%d] %v does not satisfy condition ", res)
 	}
 }
+
+type A int
+type B *int
+type C any
+type D []int
+type E map[string]int
+type F [1]int
+type G struct {
+	X int
+}
+
+func TestDeepswapCustomTypes(t *testing.T) {
+
+	tt := []struct {
+		src  any
+		old  any
+		new  any
+		resF func(any) bool
+	}{
+		{
+			src: A(1),
+			old: 1,
+			new: 2,
+			resF: func(x any) bool {
+				return x.(A) == 2
+			},
+		},
+		{
+			src: B(toPointer(1)),
+			old: 1,
+			new: 2,
+			resF: func(x any) bool {
+				return *x.(B) == 2
+			},
+		},
+		{
+			src: C(1),
+			old: 1,
+			new: 2,
+			resF: func(x any) bool {
+				return x.(C).(int) == 2
+			},
+		},
+		{
+			src: D{1},
+			old: 1,
+			new: 2,
+			resF: func(x any) bool {
+				return x.(D)[0] == 2
+			},
+		},
+		{
+			src: E{
+				"1": 1,
+			},
+			old: 1,
+			new: 2,
+			resF: func(x any) bool {
+				return x.(E)["1"] == 2
+			},
+		},
+		{
+			src: F{1},
+			old: 1,
+			new: 2,
+			resF: func(x any) bool {
+				return x.(F)[0] == 2
+			},
+		},
+		{
+			src: G{
+				X: 1,
+			},
+			old: 1,
+			new: 2,
+			resF: func(x any) bool {
+				return x.(G).X == 2
+			},
+		},
+	}
+
+	for _, tc := range tt {
+		res := DeepSwap(tc.src, tc.old, tc.new)
+
+		assert.Truef(t, tc.resF(res), "[%d] %v does not satisfy condition ", res)
+	}
+}
