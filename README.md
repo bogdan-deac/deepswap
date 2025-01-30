@@ -29,6 +29,6 @@ func main() {
       "1": 1,
     },
   }
-  fmt.Println(deepswap.DeepSwap(uggo, 1, 3).(Ugly))
+  fmt.Println(deepswap.DeepSwap(uggo, 1, 3))
 }
 ```
